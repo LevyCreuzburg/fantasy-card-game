@@ -1,0 +1,47 @@
+Progression einbauen
+    Gold/XP nach Match, Karten freischalten/upgraden.
+
+Technik/Codequalität
+    Spielzustand speichern (localStorage: Deck, Stats, letzte Schwierigkeit).
+    Daten für Karten in eigene JSON-Datei auslagern.
+    Kleine Test-Suite für Kernlogik (Schaden, Mana, KI-Auswahl).
+
+Deckbau
+    vor dem Match eigenes Deck aus 12-20 Karten bauen 
+    (mit klaren Kostenlimits), (eigene Decks speichern/laden)
+
+Match-History
+    Match-Replay/Turn-History
+        nach Runde (welche Karte wann wie viel Schaden/Heal gemacht hat).
+        Letzte Spiele mit Deck, Schaden, MVP-Karte.
+
+Save-System für Progression + Settings-Menü
+
+Mehr Endgame-Progression
+    (Prestige nach max Level, neue kosmetische Linien).
+    Unendlicher Modus mit steigender Schwierigkeit + Rangliste.
+
+Gegner-Intent-Anzeige:
+    Zeigt an, ob KI eher Schaden/Heilung/Control plant.
+
+Mehr Ressourcen:
+    Neben Mana z. B. “Energie” für Spezialkarten.
+
+Karten-Upgrades:
+    Karten im Run temporär verbessern (+1 Schaden, -1 Kosten, Zusatzstatus).
+
+Echte Kampagnen-Events
+    mit Entscheidungen (Risk/Reward statt nur statische Boni).
+
+Boss-Mechaniken ausbauen
+    (mehrere Phasen, eigene Arena-Effekte, Relikt-Synergien).
+
+Mehr Karten + Archetypen
+    (Control, Combo, Summon, Dispel/Counter-Play).
+
+Balancing-Pass
+    mit Telemetrie (Winrate je Karte/Relikt/Schwierigkeit).
+
+UX-Polish
+    (klarere Tooltips, Combat-Preview vor Ausspielen, bessere Mobile-Layouts).
+

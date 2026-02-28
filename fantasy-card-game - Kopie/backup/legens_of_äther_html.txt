@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legends of Aether</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="message-overlay" class="message-overlay hidden"></div>
+    <div id="ui-tooltip" class="ui-tooltip" role="tooltip" aria-hidden="true"></div>
+    <div id="result-transition-overlay" class="result-transition-overlay hidden">
+        <div class="result-transition-curtain result-transition-curtain-top" aria-hidden="true"></div>
+        <div class="result-transition-curtain result-transition-curtain-bottom" aria-hidden="true"></div>
+        <p id="result-transition-text" class="result-transition-text"></p>
+    </div>
+    <section id="pause-menu" class="pause-overlay">
+        <div class="pause-panel">
+            <h2>Spiel ist pausiert</h2>
+            <button id="pause-resume-btn" type="button">Fortsetzen</button>
+            <button id="pause-mainmenu-btn" type="button">Zum Hauptmenü</button>
+        </div>
+    </section>
+    <section id="main-menu" class="menu-overlay">
+        <div class="menu-panel">
+            <header class="menu-hero" aria-hidden="true">
+                <div class="menu-hero-content">
+                    <p class="menu-hero-kicker">Fantasy Card Arena</p>
+                    <h2>Legends of Aether</h2>
+                </div>
+            </header>
+            <div id="menu-home" class="menu-home">
+                <p class="menu-tagline">Taktisches Kartenduell gegen die KI</p>
+                <p id="menu-result" class="menu-result">Bereit für eine neue Runde?</p>
+                <p id="menu-campaign-status" class="menu-campaign-status">Kampagne: Nicht aktiv</p>
+                <div class="menu-record-card">
+                    <h3>Deine Bilanz</h3>
+                    <p id="menu-record" class="menu-record">Gewonnen: 0 | Verloren: 0</p>
+                </div>
+                <div class="menu-progression-card">
+                    <h3>Progression</h3>
+                    <div class="menu-progression-headline">
+                        <p id="menu-level" class="menu-level">Level 1 - 0 XP</p>
+                    </div>
+                    <p id="menu-relic-current" class="menu-cosmetic-current">Relikt: Klinge des Kriegers</p>
+                    <p id="menu-relic-unlocked" class="menu-cosmetic-unlocked">Relikte freigeschaltet: 1</p>
+                    <div class="menu-cosmetic-controls">
+                        <button id="menu-relic-prev-btn" type="button" aria-label="Vorheriges Relikt"><</button>
+                        <button id="menu-relic-next-btn" type="button" aria-label="Naechstes Relikt">></button>
+                    </div>
+                    <div class="menu-xp-track" aria-hidden="true">
+                        <div id="menu-xp-fill" class="menu-xp-fill"></div>
+                    </div>
+                    <p id="menu-xp-text" class="menu-xp-text">Noch 100 XP bis Level 2</p>
+                    <div class="menu-goals-grid">
+                        <div class="menu-goals-column menu-tasks-grid">
+                            <div class="menu-task-card">
+                                <p id="menu-daily-quest-title" class="menu-quest-title">Tagesquest: -</p>
+                                <p id="menu-daily-quest-progress" class="menu-quest-progress">0/0</p>
+                                <p id="menu-daily-quest-reward" class="menu-quest-reward">Belohnung: 0 XP</p>
+                            </div>
+                            <div class="menu-task-card">
+                                <p id="menu-challenge-title" class="menu-quest-title">Challenge: -</p>
+                                <p id="menu-challenge-progress" class="menu-quest-progress">0/0</p>
+                                <p id="menu-challenge-reward" class="menu-quest-reward">Belohnung: 0 XP</p>
+                            </div>
+                            <div id="menu-weekly-quest-card" class="menu-task-card">
+                                <p id="menu-weekly-quest-title" class="menu-quest-title">Wochenquest: -</p>
+                                <p id="menu-weekly-quest-progress" class="menu-quest-progress">0/0</p>
+                                <p id="menu-weekly-quest-reward" class="menu-quest-reward">Belohnung: 0 XP</p>
+                            </div>
+                        </div>
+                        <div class="menu-goals-column">
+                            <p id="menu-achievement-summary" class="menu-quest-title">Achievements: 0/0</p>
+                            <div id="menu-achievement-list" class="menu-achievement-list"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-options">
+                    <label for="menu-difficulty">Schwierigkeit</label>
+                    <select id="menu-difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+                <div class="menu-actions">
+                    <button id="menu-start-btn" type="button">Spiel starten</button>
+                    <button id="menu-fullscreen-btn" type="button">Vollbild starten</button>
+                    <button id="menu-campaign-btn" type="button">Kampagne</button>
+                    <button id="menu-index-btn" type="button">Kartenindex</button>
+                    <button id="menu-tutorial-btn" type="button">Tutorial</button>
+                    <button id="menu-rewards-btn" type="button">Belohnungen</button>
+                    <button id="menu-stats-btn" type="button">Statistik</button>
+                    <button id="menu-settings-btn" type="button">Einstellungen</button>
+                    <button id="menu-mod-btn" type="button">Mod</button>
+                </div>
+            </div>
+            <div id="menu-customize" class="menu-customize"></div>
+            <div id="menu-campaign" class="menu-campaign">
+                <h3>Kampagnenmodus</h3>
+                <p id="menu-campaign-run" class="menu-campaign-run">Kein aktiver Lauf</p>
+                <div class="menu-campaign-card">
+                    <label for="menu-campaign-region">Region</label>
+                    <select id="menu-campaign-region"></select>
+                    <div id="menu-campaign-path" class="menu-campaign-path"></div>
+                </div>
+                <div class="menu-campaign-actions">
+                    <button id="menu-campaign-start-btn" type="button">Pfad starten</button>
+                    <button id="menu-campaign-back-btn" type="button">Zum Hauptmenü</button>
+                </div>
+            </div>
+            <div id="menu-index" class="menu-index">
+                <h3>Kartenindex</h3>
+                <div id="menu-card-index-list" class="menu-card-index-list"></div>
+                <div id="menu-selected-card" class="menu-selected-card">
+                    <p>Karte anklicken für Details.</p>
+                </div>
+                <button id="menu-back-btn" type="button">Zurück</button>
+            </div>
+            <div id="menu-tutorial" class="menu-tutorial">
+                <h3>Tutorial</h3>
+                <div id="menu-tutorial-content" class="menu-tutorial-content">
+                    <div id="menu-tutorial-visual" class="menu-tutorial-visual" aria-hidden="true"></div>
+                    <h4 id="menu-tutorial-title">Willkommen</h4>
+                    <p id="menu-tutorial-text">Lerne die wichtigsten Spielsysteme kennen.</p>
+                </div>
+                <div class="menu-tutorial-controls">
+                    <button id="menu-tutorial-prev-btn" type="button">Zurück</button>
+                    <button id="menu-tutorial-next-btn" type="button">Weiter</button>
+                </div>
+                <button id="menu-tutorial-back-btn" type="button">Zum Hauptmenü</button>
+            </div>
+            <div id="menu-rewards" class="menu-rewards">
+                <h3>XP-Belohnungen</h3>
+                <p id="menu-rewards-current-level" class="menu-rewards-current-level">Dein aktuelles Level: 1</p>
+                <div id="menu-rewards-list" class="menu-rewards-list"></div>
+                <button id="menu-rewards-back-btn" type="button">Zum Hauptmenü</button>
+            </div>
+            <div id="menu-stats" class="menu-stats">
+                <h3>Rangliste / Statistik</h3>
+                <div id="menu-stats-difficulty" class="menu-stats-block"></div>
+                <div id="menu-stats-cards" class="menu-stats-block"></div>
+                <button id="menu-stats-back-btn" type="button">Zum Hauptmenü</button>
+            </div>
+            <div id="menu-settings" class="menu-settings">
+                <h3>Einstellungen</h3>
+                <div class="menu-settings-layout">
+                    <aside class="menu-settings-list" aria-label="Einstellungsbereiche">
+                        <button id="menu-settings-tab-sound" class="menu-settings-tab active" type="button">
+                            <span class="menu-settings-icon" aria-hidden="true">♪</span>
+                            <span>1. Sound</span>
+                        </button>
+                        <button id="menu-settings-tab-combat" class="menu-settings-tab" type="button">
+                            <span class="menu-settings-icon" aria-hidden="true">⚔</span>
+                            <span>2. Kampftempo</span>
+                        </button>
+                        <button id="menu-settings-tab-cosmetic" class="menu-settings-tab" type="button">
+                            <span class="menu-settings-icon" aria-hidden="true">✦</span>
+                            <span>3. Kosmetik</span>
+                        </button>
+                        <button id="menu-settings-tab-campaign-title" class="menu-settings-tab" type="button">
+                            <span class="menu-settings-icon" aria-hidden="true">♛</span>
+                            <span>4. Kampagnen-Titel</span>
+                        </button>
+                        <button id="menu-settings-tab-accessibility" class="menu-settings-tab" type="button">
+                            <span class="menu-settings-icon" aria-hidden="true">◎</span>
+                            <span>5. Accessibility</span>
+                        </button>
+                    </aside>
+                    <div class="menu-settings-content">
+                        <div id="menu-settings-panel-sound" class="menu-settings-card menu-settings-panel show">
+                            <label for="menu-sound-volume">Master-Lautstärke</label>
+                            <p id="menu-sound-volume-text" class="menu-settings-note">Lautstärke: 100%</p>
+                            <input id="menu-sound-volume" class="menu-sound-slider" type="range" min="0" max="100" step="1" value="100">
+                            <label for="menu-sound-ui-volume">UI-Lautstärke</label>
+                            <p id="menu-sound-ui-volume-text" class="menu-settings-note">UI: 100%</p>
+                            <input id="menu-sound-ui-volume" class="menu-sound-slider" type="range" min="0" max="100" step="1" value="100">
+                            <label for="menu-sound-combat-volume">Kampf-Lautstärke</label>
+                            <p id="menu-sound-combat-volume-text" class="menu-settings-note">Kampf: 100%</p>
+                            <input id="menu-sound-combat-volume" class="menu-sound-slider" type="range" min="0" max="100" step="1" value="100">
+                            <label for="menu-sound-events-volume">Event-Lautstärke</label>
+                            <p id="menu-sound-events-volume-text" class="menu-settings-note">Events: 100%</p>
+                            <input id="menu-sound-events-volume" class="menu-sound-slider" type="range" min="0" max="100" step="1" value="100">
+                            <label class="menu-settings-toggle" for="menu-sound-mute">
+                                <input id="menu-sound-mute" type="checkbox">
+                                <span>Stumm schalten</span>
+                            </label>
+                            <button id="menu-sound-test-btn" type="button">Sound testen</button>
+                        </div>
+                        <div id="menu-settings-panel-combat" class="menu-settings-card menu-settings-panel">
+                            <div class="menu-combat-settings-row">
+                                <div class="menu-combat-speed-group">
+                                    <label for="menu-combat-speed">Kampf-Tempo</label>
+                                    <select id="menu-combat-speed">
+                                        <option value="fast">Schnell</option>
+                                        <option value="normal" selected>Normal</option>
+                                        <option value="slow">Langsam</option>
+                                    </select>
+                                </div>
+                                <div class="menu-combat-synergy-group">
+                                    <p class="menu-combat-synergy-title">Karten kombos</p>
+                                    <label class="menu-settings-toggle menu-combat-synergy-toggle" for="menu-combat-synergy-enabled">
+                                        <input id="menu-combat-synergy-enabled" type="checkbox" checked>
+                                        <span>Karten-Synergien aktiv</span>
+                                    </label>
+                                    <button id="menu-combat-synergy-info-btn" type="button">Alle Kombos anzeigen</button>
+                                </div>
+                            </div>
+                            <p class="menu-settings-note">Steuert Animationen und Delays im Kampf.</p>
+                        </div>
+                        <div id="menu-settings-panel-cosmetic" class="menu-settings-card menu-settings-panel">
+                            <h4>Kosmetik</h4>
+                            <p id="menu-customize-cosmetic-current" class="menu-cosmetic-current">Kosmetik: Initiand</p>
+                            <p id="menu-customize-cosmetic-unlocked" class="menu-cosmetic-unlocked">Freigeschaltet: 1</p>
+                            <div class="menu-cosmetic-controls">
+                                <button id="menu-customize-cosmetic-prev-btn" type="button" aria-label="Vorherige Kosmetik"><</button>
+                                <button id="menu-customize-cosmetic-next-btn" type="button" aria-label="Naechste Kosmetik">></button>
+                            </div>
+                        </div>
+                        <div id="menu-settings-panel-campaign-title" class="menu-settings-card menu-settings-panel">
+                            <h4>Kampagnen-Titel</h4>
+                            <p id="menu-customize-title-current" class="menu-cosmetic-current">Kampagnen-Titel: Wanderer</p>
+                            <p id="menu-customize-title-unlocked" class="menu-cosmetic-unlocked">Freigeschaltet: 1</p>
+                            <div class="menu-cosmetic-controls">
+                                <button id="menu-customize-title-prev-btn" type="button" aria-label="Vorheriger Titel"><</button>
+                                <button id="menu-customize-title-next-btn" type="button" aria-label="Naechster Titel">></button>
+                            </div>
+                        </div>
+                        <div id="menu-settings-panel-accessibility" class="menu-settings-card menu-settings-panel">
+                            <h4>Accessibility</h4>
+                            <label for="menu-accessibility-font-scale">Schriftgröße</label>
+                            <select id="menu-accessibility-font-scale">
+                                <option value="normal" selected>Normal</option>
+                                <option value="large">Groß</option>
+                                <option value="xlarge">Sehr groß</option>
+                            </select>
+                            <label class="menu-settings-toggle" for="menu-accessibility-colorblind">
+                                <input id="menu-accessibility-colorblind" type="checkbox">
+                                <span>Farbblind-Modus</span>
+                            </label>
+                            <label class="menu-settings-toggle" for="menu-accessibility-reduced-motion">
+                                <input id="menu-accessibility-reduced-motion" type="checkbox">
+                                <span>Reduzierte Animationen</span>
+                            </label>
+                            <p class="menu-settings-note">Änderungen gelten sofort und werden gespeichert.</p>
+                        </div>
+                    </div>
+                </div>
+                <button id="menu-settings-back-btn" type="button">Zum Hauptmenü</button>
+            </div>
+            <div id="menu-synergy-index" class="menu-synergy-index">
+                <h3>Karten kombos</h3>
+                <div id="menu-synergy-list" class="menu-synergy-list"></div>
+                <button id="menu-synergy-back-btn" type="button">Zurück zu Einstellungen</button>
+            </div>
+            <div id="menu-mod" class="menu-mod">
+                <h3>Mod-Bereich</h3>
+                <div class="menu-mod-card">
+                    <label for="menu-mod-password">Passwort</label>
+                    <input id="menu-mod-password" type="password" placeholder="Passwort eingeben">
+                    <button id="menu-mod-unlock-btn" type="button">Freischalten</button>
+                    <p id="menu-mod-feedback" class="menu-mod-feedback"></p>
+                </div>
+                <div id="menu-mod-tools" class="menu-mod-tools">
+                    <div class="menu-mod-column-group">
+                        <div class="menu-mod-column">
+                            <h4>Bilanz</h4>
+                            <p class="menu-mod-note">Setzt Siege/Niederlagen und Kartenstatistik zurück.</p>
+                            <button id="menu-mod-reset-record-btn" type="button">Bilanz zurücksetzen</button>
+                        </div>
+                        <div class="menu-mod-column">
+                            <h4>Kampagne</h4>
+                            <p class="menu-mod-note">Setzt Regionen-Fortschritt, Lauf und Titel zurück.</p>
+                            <button id="menu-mod-reset-campaign-btn" type="button">Kampagne zurücksetzen</button>
+                        </div>
+                    </div>
+                    <div class="menu-mod-column">
+                        <h4>Level</h4>
+                        <p id="menu-mod-current-level" class="menu-mod-current-level">Aktuelles Level: 1</p>
+                        <label for="menu-mod-level-input">Level setzen</label>
+                        <input id="menu-mod-level-input" type="number" min="1" max="200" value="1">
+                        <button id="menu-mod-set-level-btn" type="button">Level übernehmen</button>
+                    </div>
+                    <div class="menu-mod-column">
+                        <h4>Achievements</h4>
+                        <label for="menu-mod-achievement-select">Achievement</label>
+                        <select id="menu-mod-achievement-select"></select>
+                        <p id="menu-mod-achievement-preview" class="menu-mod-note">Aktuell: -</p>
+                        <label for="menu-mod-achievement-tier-input">Tier setzen</label>
+                        <p class="menu-mod-note">Maximales Tier: 10</p>
+                        <input id="menu-mod-achievement-tier-input" type="number" min="1" max="10" value="1">
+                        <button id="menu-mod-set-achievement-tier-btn" type="button">Achievement-Tier übernehmen</button>
+                        <button id="menu-mod-reset-achievements-btn" type="button">Achievements zurücksetzen</button>
+                    </div>
+                </div>
+                <button id="menu-mod-back-btn" type="button">Zum Hauptmenü</button>
+            </div>
+        </div>
+    </section>
+
+    <main class="app-shell">
+        <header class="app-header">
+            <button id="pause-btn" class="pause-controls" type="button">Pause</button>
+            <h1>Legends of Aether</h1>
+            <div class="controls-row">
+                <label for="difficulty">Schwierigkeit:</label>
+                <select id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+            <p id="round-event" class="round-event"></p>
+            <p id="match-relic" class="match-relic"></p>
+            <div id="fullscreen-container" class="fullscreen-controls">
+                <button id="fullscreen-btn" type="button">Vollbild starten</button>
+                <p id="fullscreen-hint">Um ein besseres Spielerlebnis zu haben bitte Vollbild starten</p>
+                <button id="exit-fullscreen-btn" type="button">Vollbild beenden</button>
+            </div>
+        </header>
+
+        <section class="board-grid" aria-label="Spielfeld">
+            <aside id="log-container" class="log-panel">
+                <h3>Game-Log</h3>
+                <div id="log-messages"></div>
+            </aside>
+
+            <section class="battlefield">
+                <div class="battle-zones" aria-hidden="true">
+                    <div class="zone-panel"></div>
+                    <div class="zone-panel"></div>
+                </div>
+
+                <div class="status-row">
+                    <article class="actor enemy">
+                        <h2 id="enemy-name">KI-Gegner</h2>
+                        <p>HP: <span id="enemy-hp">50</span></p>
+                        <p>Mana: <span id="enemy-mana">3</span></p>
+                        <p>Aktionen: <span id="enemy-actions">3</span></p>
+                        <div id="enemy-status-effects" class="status-effects" aria-live="polite"></div>
+                        <div id="enemy-damage-log" class="damage-log" aria-live="polite"></div>
+                    </article>
+
+                    <article class="actor player">
+                        <h2>Spieler</h2>
+                        <p class="actor-title">Titel: <span id="player-title">Initiand</span></p>
+                        <p>HP: <span id="player-hp">50</span></p>
+                        <p>Mana: <span id="player-mana">3</span></p>
+                        <p>Aktionen: <span id="player-actions">3</span></p>
+                        <div id="player-status-effects" class="status-effects" aria-live="polite"></div>
+                        <div id="player-damage-log" class="damage-log" aria-live="polite"></div>
+                    </article>
+                </div>
+
+                <div class="hands-row">
+                    <section class="ai-cards" aria-label="KI-Karten">
+                        <h3>KI-Karten</h3>
+                        <div class="ai-hand"></div>
+                    </section>
+
+                    <section class="cards" aria-label="Deine Karten">
+                        <h3>Deine Karten</h3>
+                        <div id="player-hand"></div>
+                    </section>
+                </div>
+            </section>
+        </section>
+
+        <footer class="app-footer">
+            <button id="draw-card" type="button">Karte ziehen</button>
+            <button id="use-ability" type="button">Fähigkeit</button>
+            <button id="end-turn" type="button">Runde beenden</button>
+        </footer>
+    </main>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
